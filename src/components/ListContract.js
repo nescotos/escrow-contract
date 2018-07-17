@@ -6,15 +6,25 @@ class ListContract extends Component{
         loading: false,
         contract: null,
         buyer: '',
-        seller: ''
+        seller: '',
+        frozenPayment: false,
+        consensusBuyer: false,
+        consensusSeller: false,
+        statusBuyer: false,
+        statusSeller: false
     }
 
     getContract = async() => {
         const contract = getContractFromAddress(this.state.contractAddress);
         const buyer = await contract.methods.buyer().call();
         const seller = await contract.methods.seller().call();
-        this.setState({buyer, seller});
-        console.log(buyer, seller);
+        const frozenPayment = await contract.methods.frozenPayment().call();
+        const consensusBuyer = await contract.methods.consensus(buyer).call();
+        const consensusSeller = await contract.methods.consensus(seller).call();
+        const statusBuyer = await contract.methods.status(buyer).call();
+        const statusSeller = await contract.methods.status(seller).call();
+        this.setState({buyer, seller, frozenPayment, consensusBuyer, consensusSeller, statusBuyer, statusSeller});
+        console.log(buyer, seller, frozenPayment);
         console.log(contract);
     }
 
