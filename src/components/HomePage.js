@@ -13,7 +13,7 @@ const HomePage = () => {
                             This application allows you to use a decentralized architecture to allow payments for Escrow Contracts without a third party using Ethereum Network and Ether as money.
                 </h2>
                         <h2 className="subtitle">
-                            You and the other part just need an Ethereum Account to start using this application, the application will generate a QR code to be able to track, use and close the contract.
+                            You and the other part just need an Ethereum Account to start using this application, the application will generate an address to be able to track, use and close the contract.
                 </h2>
                     </div>
                 </div>

@@ -7,14 +7,14 @@ class CreateContract extends Component {
         address: '',
         ether: 0.0005,
         loading: false,
-        message: 'The transaction migth take a while!!! Hold on'
+        message: 'The transaction might take a while!!! Hold on'
     }
 
     clear = () => {
         this.setState({
             address : '',
             ether: 0.0005,
-            message: 'The transaction migth take a while!!! Hold on'
+            message: 'The transaction might take a while!!! Hold on'
         });
     }
 

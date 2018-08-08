@@ -17,7 +17,9 @@ class ListContract extends Component{
         loaded: false,
         address : null,
         settingStatus: false,
-        loadingContract: false
+        loadingContract: false,
+        claimingPayment: false,
+        frozenDate: ''
     }
     
 
@@ -29,13 +31,16 @@ class ListContract extends Component{
             const buyer = await contract.methods.buyer().call();
             const seller = await contract.methods.seller().call();
             const frozenPayment = await contract.methods.frozenPayment().call();
+            let frozenDate = await contract.methods.frozenDate().call();
             const consensusBuyer = await contract.methods.consensus(buyer).call();
             const consensusSeller = await contract.methods.consensus(seller).call();
             const statusBuyer = await contract.methods.status(buyer).call();
             const statusSeller = await contract.methods.status(seller).call();
+            frozenDate = new Date(frozenDate * 1000);//Date is in seconds!
+            frozenDate = new Date(frozenDate.setDate(frozenDate.getDate() + 45));
             let balance = await contract.methods.getBalance().call();
             balance = web3.utils.fromWei(balance, 'ether');
-            this.setState({ buyer, seller, frozenPayment, consensusBuyer, consensusSeller, statusBuyer, statusSeller, balance, loaded: true, contract, loadingContract: false});
+            this.setState({ buyer, seller, frozenPayment, consensusBuyer, consensusSeller, statusBuyer, statusSeller,frozenDate, balance, loaded: true, contract, loadingContract: false});
         }
     }
 
@@ -55,6 +60,15 @@ class ListContract extends Component{
             from: this.state.address 
         });
         this.setState({settingStatus: false});
+    }
+
+    claimPayment = async() => {
+        this.setState({ claimingPayment: true });
+        await this.state.contract.methods.claimPayment()
+        .send({
+            from: this.state.address
+        });
+        this.setState({ claimingPayment: false });
     }
 
     render() {
@@ -149,9 +163,26 @@ class ListContract extends Component{
                                 </div>
                             }
                             {
-                                ((this.state.address === this.state.seller && this.state.statusSeller) || (this.state.address === this.state.buyer && this.state.statusBuyer)) && 
+                                ((this.state.address === this.state.seller && this.state.statusSeller) || (this.state.address === this.state.buyer && this.state.statusBuyer)) &&
                                 <div>
                                     <h1><strong>You already voted in this transaction</strong></h1>
+                                </div>
+                            }
+                            {
+                                (this.state.statusBuyer && this.state.statusSeller) && (this.state.address === this.state.buyer || this.state.address === this.state.seller) &&
+                                <div>
+                                    <div className="field">
+                                        <label className="label">Ready to Claim the Payment? If you are the buyer all the funds will go to the seller if both agreed in the transaction, otherwise the funds will go to the buyer!</label>
+                                        <button type="button" onClick={() => { this.claimPayment() }} className={`button is-success  ${this.state.claimingPayment ? 'is-loading' : ''}`}>Claim Payment</button>
+                                    </div>
+                                </div>
+                            }
+                            {
+                                (this.state.address === this.state.buyer || this.state.address === this.state.seller) && this.state.frozenPayment && 
+                                <div>
+                                    <div className="field">
+                                        <label className="label">Your Payment is Frozen!!! It will be released on {this.state.frozenDate.toLocaleDateString()} {this.state.frozenDate.toLocaleTimeString()}</label>
+                                    </div>
                                 </div>
                             }
                         </div>

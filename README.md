@@ -39,9 +39,14 @@ npm test
 - Add your own Factory Contract Address (you could use: `0xE7cabDE413016C1AA9bF1eEb8cD1d3aD86c6840f`)
 - Add `contractAddress` field inside your `env.json` file (you can use the mentioned above)
 
-```
-npm start
-```
+    ```
+    npm start
+    ```
 
 #### Deploy
-**Soon**
+ If you wanna deploy your own version of this contract:
+
+ - Inside `src/env.json` file add: `address` and `endpoint` with your account address and endpoint to the network that you want.
+    ```
+    npm run deploy
+    ```
