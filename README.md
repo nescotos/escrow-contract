@@ -45,6 +45,9 @@ npm test
 
 #### Deploy
  If you wanna deploy your own version of this contract:
+    ```
+    npm run compile
+    ```
 
  - Inside `src/env.json` file add: `address` and `endpoint` with your account address and endpoint to the network that you want.
     ```
